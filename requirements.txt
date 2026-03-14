@@ -1,4 +1,5 @@
 livekit-agents>=1.4.5
 livekit-plugins-openai>=1.4.5
 livekit-plugins-simli>=1.4.5
+livekit-plugins-silero>=1.4.5
 python-dotenv
