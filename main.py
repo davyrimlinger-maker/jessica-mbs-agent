@@ -10,10 +10,9 @@ load_dotenv(override=True)
 
 async def entrypoint(ctx: JobContext):
     session = AgentSession(
-        llm=openai.realtime.RealtimeModel(
-            voice="alloy",
-            instructions="Tu es Jessica, conseillere commerciale MBS Standoffs. Tu parles uniquement en francais. Tu aides les clients a trouver les bons produits du catalogue MBS. Tu es professionnelle, chaleureuse et concise. Tu recommandes les produits avec leur reference exacte. Tu mentionnes la livraison express quand c est pertinent. Pas d emojis, pas de markdown."
-        ),
+        llm=openai.LLM(model="gpt-4o"),
+        tts=openai.TTS(voice="alloy"),
+        stt=openai.STT(),
     )
     simli_avatar = simli.AvatarSession(
         simli_config=simli.SimliConfig(
@@ -22,7 +21,10 @@ async def entrypoint(ctx: JobContext):
         ),
     )
     await simli_avatar.start(session, room=ctx.room)
-    await session.start(agent=Agent(instructions=""), room=ctx.room)
+    await session.start(
+        agent=Agent(instructions="Tu es Jessica, conseillere commerciale MBS Standoffs. Tu parles uniquement en francais. Tu aides les clients a trouver les bons produits du catalogue MBS. Tu es professionnelle, chaleureuse et concise."),
+        room=ctx.room,
+    )
 
 if __name__ == "__main__":
     cli.run_app(WorkerOptions(entrypoint_fnc=entrypoint, worker_type=WorkerType.ROOM))
