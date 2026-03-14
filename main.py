@@ -1,18 +1,20 @@
 import logging
 import os
 from dotenv import load_dotenv
-from livekit.agents import Agent, AgentSession, JobContext, WorkerOptions, WorkerType, cli
-from livekit.plugins import openai, simli
+from livekit.agents import Agent, AgentSession, JobContext, WorkerOptions, WorkerType, cli, AutoSubscribe
+from livekit.plugins import openai, silero, simli
 
 logger = logging.getLogger("jessica-mbs")
 logger.setLevel(logging.INFO)
 load_dotenv(override=True)
 
 async def entrypoint(ctx: JobContext):
+    await ctx.connect(auto_subscribe=AutoSubscribe.AUDIO_ONLY)
     session = AgentSession(
         llm=openai.LLM(model="gpt-4o"),
         tts=openai.TTS(voice="alloy"),
-        stt=openai.STT(),
+        stt=openai.STT(model="whisper-1"),
+        vad=silero.VAD.load(),
     )
     simli_avatar = simli.AvatarSession(
         simli_config=simli.SimliConfig(
