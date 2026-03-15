@@ -9,7 +9,7 @@ logger.setLevel(logging.INFO)
 load_dotenv(override=True)
 
 async def entrypoint(ctx: JobContext):
-    await ctx.connect(auto_subscribe=AutoSubscribe.AUDIO_ONLY)
+    await ctx.connect(auto_subscribe=AutoSubscribe.SUBSCRIBE_ALL)
     session = AgentSession(
         llm=openai.LLM(model="gpt-4o"),
         tts=openai.TTS(voice="alloy"),
