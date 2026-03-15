@@ -2,6 +2,7 @@ import logging
 import os
 from dotenv import load_dotenv
 from livekit.agents import Agent, AgentSession, JobContext, WorkerOptions, WorkerType, cli, AutoSubscribe
+from livekit.agents.pipeline import VoicePipelineAgent
 from livekit.plugins import openai, silero, simli
 
 logger = logging.getLogger("jessica-mbs")
@@ -26,6 +27,7 @@ async def entrypoint(ctx: JobContext):
     await session.start(
         agent=Agent(instructions="Tu es Jessica, conseillere commerciale MBS Standoffs. Tu parles uniquement en francais. Tu aides les clients a trouver les bons produits du catalogue MBS. Tu es professionnelle, chaleureuse et concise."),
         room=ctx.room,
+        room_input_options={"close_on_disconnect": False},
     )
 
 if __name__ == "__main__":
